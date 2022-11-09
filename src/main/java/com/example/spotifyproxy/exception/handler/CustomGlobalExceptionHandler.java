@@ -1,5 +1,7 @@
-package com.example.spotifyproxy.exception;
+package com.example.spotifyproxy.exception.handler;
 
+import com.example.spotifyproxy.exception.ArtistNotFoundException;
+import com.example.spotifyproxy.exception.UnauthorizedException;
 import com.example.spotifyproxy.exception.entity.ExceptionEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

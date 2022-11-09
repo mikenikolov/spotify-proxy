@@ -7,6 +7,7 @@ import com.example.spotifyproxy.service.component.ExistsEntityChecker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class ArtistSaverImpl implements ArtistSaver {
     private final ExistsEntityChecker existsEntityChecker;
     private final ArtistRepository artistRepository;
 
+    @Transactional
     @Override
     public Artist saveArtist(Artist artist) {
         artist.setArtistName(artist.getArtistName().toLowerCase());

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +28,9 @@ public class SongResponseParserImpl implements SongResponseParser {
             List<Song> songList = new ArrayList<>();
             jsonNode.withArray("tracks")
                     .forEach(track -> songList.add(new Song(track.get("name").asText(), track.get("id").asText())));
-            return songList.subList(0, limitOfSongs);
+            return songList.stream()
+                    .limit(limitOfSongs)
+                    .collect(Collectors.toList());
         } catch (JsonProcessingException e) {
             throw new ResponseParserException("Error during parsing a JSON", e);
         }
