@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "songs")
@@ -28,4 +29,17 @@ public class Song {
     private String name;
     @NonNull
     private String spotifySongId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Song song = (Song) o;
+        return Objects.equals(id, song.id) && name.equals(song.name) && spotifySongId.equals(song.spotifySongId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, spotifySongId);
+    }
 }
