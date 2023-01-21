@@ -15,23 +15,24 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class ExistsEntityCheckerImpl implements ExistsEntityChecker {
-    private GenreRepository gengreRepository;
+    private GenreRepository genreRepository;
     private SongRepository songRepository;
 
     @Override
-    public void processExistsGengres(Artist artist) {
+    public Artist processExistsGenres(Artist artist) {
         List<String> artistGenres = artist.getGenres().stream()
                 .map(Genre::getName)
                 .collect(Collectors.toList());
-        List<Genre> existsGenres = gengreRepository.findAllByNameIn(artistGenres);
+        List<Genre> existsGenres = genreRepository.findAllByNameIn(artistGenres);
         for (Genre eg : existsGenres) {
             artist.getGenres().removeIf(e -> e.getName().equals(eg.getName()));
             artist.getGenres().add(eg);
         }
+        return artist;
     }
 
     @Override
-    public void processExistsSongs(Artist artist) {
+    public Artist processExistsSongs(Artist artist) {
         List<String> artistSongs = artist.getSongs().stream()
                 .map(Song::getSpotifySongId)
                 .collect(Collectors.toList());
@@ -40,5 +41,6 @@ public class ExistsEntityCheckerImpl implements ExistsEntityChecker {
             artist.getSongs().removeIf(e -> e.getSpotifySongId().equals(es.getSpotifySongId()));
             artist.getSongs().add(es);
         }
+        return artist;
     }
 }

@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "artists")
@@ -38,4 +39,22 @@ public class Artist {
     @JoinTable(joinColumns = @JoinColumn(name = "artist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
     private List<Song> songs;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Artist artist = (Artist) o;
+        return followers == artist.followers
+                && Objects.equals(id, artist.id)
+                && Objects.equals(artistName, artist.artistName)
+                && Objects.equals(spotifyId, artist.spotifyId)
+                && Objects.equals(genres, artist.genres)
+                && Objects.equals(songs, artist.songs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, artistName, spotifyId, followers, genres, songs);
+    }
 }
