@@ -26,10 +26,10 @@ public class ArtistSaverImpl implements ArtistSaver {
         if (savedArtist.isPresent()) {
             return savedArtist.get();
         }
-        existsEntityChecker.processExistsGengres(artist);
-        existsEntityChecker.processExistsSongs(artist);
-        artistRepository.save(artist);
+        Artist processedArtist = existsEntityChecker.processExistsGenres(artist);
+        processedArtist = existsEntityChecker.processExistsSongs(processedArtist);
+        artistRepository.save(processedArtist);
         log.info(String.format("[APP] The artist with ID {%s} was saved to cache", artist.getSpotifyId()));
-        return artist;
+        return processedArtist;
     }
 }
