@@ -1,6 +1,8 @@
 package com.example.spotifyproxy.service.component.impl;
 
 import com.example.spotifyproxy.model.Artist;
+import com.example.spotifyproxy.model.Genre;
+import com.example.spotifyproxy.model.Song;
 import com.example.spotifyproxy.repository.ArtistRepository;
 import com.example.spotifyproxy.service.component.ArtistSaver;
 import com.example.spotifyproxy.service.component.ExistsEntityChecker;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -21,15 +24,16 @@ public class ArtistSaverImpl implements ArtistSaver {
     @Transactional
     @Override
     public Artist saveArtist(Artist artist) {
-        artist.setArtistName(artist.getArtistName().toLowerCase());
         Optional<Artist> savedArtist = artistRepository.findArtistByArtistName(artist.getArtistName());
         if (savedArtist.isPresent()) {
             return savedArtist.get();
         }
-        Artist processedArtist = existsEntityChecker.processExistsGenres(artist);
-        processedArtist = existsEntityChecker.processExistsSongs(processedArtist);
-        artistRepository.save(processedArtist);
+        List<Genre> genres = artist.getGenres();
+        List<Song> songs = artist.getSongs();
+        artist.setGenres(existsEntityChecker.processExistsGenres(genres));
+        artist.setSongs(existsEntityChecker.processExistsSongs(songs));
+        artistRepository.save(artist);
         log.info(String.format("[APP] The artist with ID {%s} was saved to cache", artist.getSpotifyId()));
-        return processedArtist;
+        return artist;
     }
 }

@@ -1,9 +1,12 @@
 package com.example.spotifyproxy.service.component;
 
-import com.example.spotifyproxy.model.Artist;
+import com.example.spotifyproxy.model.Genre;
+import com.example.spotifyproxy.model.Song;
+
+import java.util.List;
 
 public interface ExistsEntityChecker {
-    Artist processExistsGenres(Artist artist);
+    List<Genre> processExistsGenres(List<Genre> artistGenres);
 
-    Artist processExistsSongs(Artist artist);
+    List<Song> processExistsSongs(List<Song> artistSongs);
 }

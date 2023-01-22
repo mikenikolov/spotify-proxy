@@ -1,6 +1,5 @@
 package com.example.spotifyproxy.service.component.impl;
 
-import com.example.spotifyproxy.model.Artist;
 import com.example.spotifyproxy.model.Genre;
 import com.example.spotifyproxy.model.Song;
 import com.example.spotifyproxy.repository.GenreRepository;
@@ -9,6 +8,7 @@ import com.example.spotifyproxy.service.component.ExistsEntityChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,28 +19,30 @@ public class ExistsEntityCheckerImpl implements ExistsEntityChecker {
     private SongRepository songRepository;
 
     @Override
-    public Artist processExistsGenres(Artist artist) {
-        List<String> artistGenres = artist.getGenres().stream()
+    public List<Genre> processExistsGenres(List<Genre> artistGenres) {
+        List<String> genreNames = artistGenres.stream()
                 .map(Genre::getName)
                 .collect(Collectors.toList());
-        List<Genre> existsGenres = genreRepository.findAllByNameIn(artistGenres);
+        List<Genre> existsGenres = genreRepository.findAllByNameIn(genreNames);
+        List<Genre> processedGenres = new ArrayList<>(artistGenres);
         for (Genre eg : existsGenres) {
-            artist.getGenres().removeIf(e -> e.getName().equals(eg.getName()));
-            artist.getGenres().add(eg);
+            processedGenres.removeIf(e -> e.getName().equals(eg.getName()));
+            processedGenres.add(eg);
         }
-        return artist;
+        return processedGenres;
     }
 
     @Override
-    public Artist processExistsSongs(Artist artist) {
-        List<String> artistSongs = artist.getSongs().stream()
+    public List<Song> processExistsSongs(List<Song> artistSongs) {
+        List<String> songSpotifyIds = artistSongs.stream()
                 .map(Song::getSpotifySongId)
                 .collect(Collectors.toList());
-        List<Song> existsSongs = songRepository.findAllBySpotifySongIdIn(artistSongs);
+        List<Song> existsSongs = songRepository.findAllBySpotifySongIdIn(songSpotifyIds);
+        List<Song> processedSongs = new ArrayList<>(artistSongs);
         for (Song es : existsSongs) {
-            artist.getSongs().removeIf(e -> e.getSpotifySongId().equals(es.getSpotifySongId()));
-            artist.getSongs().add(es);
+            processedSongs.removeIf(e -> e.getName().equals(es.getName()));
+            processedSongs.add(es);
         }
-        return artist;
+        return processedSongs;
     }
 }
