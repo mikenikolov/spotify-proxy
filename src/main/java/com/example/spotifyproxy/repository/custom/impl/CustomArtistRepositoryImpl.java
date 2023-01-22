@@ -20,7 +20,7 @@ public class CustomArtistRepositoryImpl implements CustomArtistRepository {
     public Optional<Artist> findArtistByArtistName(String artistName) {
         Artist artist;
         try {
-            artist = entityManager.createQuery("select a from Artist a left join fetch a.genres where a.artistName = :name", Artist.class)
+            artist = entityManager.createQuery("select a from Artist a left join fetch a.genres where lower(a.artistName) = lower(:name) ", Artist.class)
                     .setParameter("name", artistName)
                     .getSingleResult();
             artist = entityManager.createQuery("select a from Artist a left join fetch a.songs where a = :artist", Artist.class)

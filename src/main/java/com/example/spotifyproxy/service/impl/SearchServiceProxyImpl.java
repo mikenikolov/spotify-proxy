@@ -36,7 +36,6 @@ public class SearchServiceProxyImpl implements SearchService {
 
     @Override
     public Artist findArtistByName(String artistName) {
-        artistName = artistName.toLowerCase();
         Optional<Artist> artistFromDb = artistRepository.findArtistByArtistName(artistName);
         if (artistFromDb.isPresent()) {
             log.info(String.format("[CACHE] Artist with ID {%s} successfully found", artistFromDb.get().getSpotifyId()));
