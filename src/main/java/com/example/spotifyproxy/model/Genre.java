@@ -2,6 +2,7 @@ package com.example.spotifyproxy.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
+@ToString
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

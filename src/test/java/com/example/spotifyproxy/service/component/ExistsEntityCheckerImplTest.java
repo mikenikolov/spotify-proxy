@@ -1,6 +1,5 @@
 package com.example.spotifyproxy.service.component;
 
-import com.example.spotifyproxy.model.Artist;
 import com.example.spotifyproxy.model.Genre;
 import com.example.spotifyproxy.model.Song;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.both;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -36,55 +42,61 @@ public class ExistsEntityCheckerImplTest {
 
     @Test
     void processExistsGenres_Not_Found_Ok() {
-        Artist artist = new Artist()
-                .setArtistName("Some Artist")
-                .setGenres(genres);
-
-        List<Genre> processedGenres = checker.processExistsGenres(artist.getGenres());
+        List<Genre> processedGenres = checker.processExistsGenres(genres);
 
         Assertions.assertEquals(2, processedGenres.size(), "Collection size of genres is different");
-        Assertions.assertNull(processedGenres.get(0).getId(), "Should be null because not found in cache");
-        Assertions.assertNull(processedGenres.get(1).getId(), "Should be null because not found in cache");
+        assertThat(processedGenres, containsInAnyOrder(
+                both(hasProperty("name", is("house")))
+                        .and(hasProperty("id", is(nullValue()))),
+                both(hasProperty("name", is("pop")))
+                        .and(hasProperty("id", is(nullValue())))
+        ));
     }
 
     @Test
     @Sql("/script/init_one_genre_exists.sql")
     void processExistsGenres_Found_Ok() {
-        Artist artist = new Artist()
-                .setArtistName("Some Artist")
-                .setGenres(genres);
-
-        List<Genre> processedGenres = checker.processExistsGenres(artist.getGenres());
+        List<Genre> processedGenres = checker.processExistsGenres(genres);
 
         Assertions.assertEquals(2, processedGenres.size(), "Collection size of genres is different");
-        Assertions.assertNull(processedGenres.get(0).getId(), "'House' genre should not contains id field as it's not found");
-        Assertions.assertNotNull(processedGenres.get(1).getId(), "'Pop' genre should contains id field as it's found");
+        assertThat(processedGenres, containsInAnyOrder(
+                both(hasProperty("name", is("house")))
+                        .and(hasProperty("id", is(nullValue()))),
+
+                both(hasProperty("name", is("pop")))
+                        .and(hasProperty("id", is(1L)))
+        ));
     }
 
     @Test
     void processExistsSongs_Not_Found_Ok() {
-        Artist artist = new Artist()
-                .setArtistName("Some Artist")
-                .setSongs(songs);
-
-        List<Song> processedSongs = checker.processExistsSongs(artist.getSongs());
+        List<Song> processedSongs = checker.processExistsSongs(songs);
 
         Assertions.assertEquals(2, processedSongs.size(), "Collection size of songs is different");
-        Assertions.assertNull(processedSongs.get(0).getId(), "Should be null because not found in cache");
-        Assertions.assertNull(processedSongs.get(1).getId(), "Should be null because not found in cache");
+        assertThat(processedSongs, containsInAnyOrder(
+                both(hasProperty("name", is("firstSong")))
+                        .and(hasProperty("id", is(nullValue())))
+                        .and(hasProperty("spotifySongId", is("firstSongId"))),
+
+                both(hasProperty("name", is("secondSong")))
+                        .and(hasProperty("id", is(nullValue())))
+                        .and(hasProperty("spotifySongId", is("secondSongId")))
+        ));
     }
 
     @Test
     @Sql("/script/init_one_song_exists.sql")
     void processExistsSongs_Found_Ok() {
-        Artist artist = new Artist()
-                .setArtistName("Some Artist")
-                .setSongs(songs);
+        List<Song> processedSongs = checker.processExistsSongs(songs);
 
-        List<Song> processedSongs = checker.processExistsSongs(artist.getSongs());
+        assertThat(processedSongs, containsInAnyOrder(
+                both(hasProperty("name", is("firstSong")))
+                        .and(hasProperty("id", is(1L)))
+                        .and(hasProperty("spotifySongId", is("firstSongId"))),
 
-        Assertions.assertEquals(2, processedSongs.size(), "Collection size of genres is different");
-        Assertions.assertNull(processedSongs.get(0).getId(), "Second song should not contains id field as it's not found");
-        Assertions.assertNotNull(processedSongs.get(1).getId(), "First song must contains id field as it's found");
+                both(hasProperty("name", is("secondSong")))
+                        .and(hasProperty("id", is(nullValue())))
+                        .and(hasProperty("spotifySongId", is("secondSongId")))
+        ));
     }
 }

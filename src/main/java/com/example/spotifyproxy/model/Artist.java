@@ -2,6 +2,7 @@ package com.example.spotifyproxy.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.CascadeType;
@@ -22,6 +23,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Accessors(chain = true)
+@ToString
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +36,12 @@ public class Artist {
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(joinColumns = @JoinColumn(name = "artist_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
+    @ToString.Exclude
     private List<Genre> genres;
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(joinColumns = @JoinColumn(name = "artist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id"))
+    @ToString.Exclude
     private List<Song> songs;
 
     @Override
@@ -57,4 +61,6 @@ public class Artist {
     public int hashCode() {
         return Objects.hash(id, artistName, spotifyId, followers, genres, songs);
     }
+
+
 }

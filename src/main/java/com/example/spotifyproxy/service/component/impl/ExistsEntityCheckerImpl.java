@@ -40,7 +40,7 @@ public class ExistsEntityCheckerImpl implements ExistsEntityChecker {
         List<Song> existsSongs = songRepository.findAllBySpotifySongIdIn(songSpotifyIds);
         List<Song> processedSongs = new ArrayList<>(artistSongs);
         for (Song es : existsSongs) {
-            processedSongs.removeIf(e -> e.getName().equals(es.getName()));
+            processedSongs.removeIf(e -> e.getSpotifySongId().equals(es.getSpotifySongId()));
             processedSongs.add(es);
         }
         return processedSongs;
