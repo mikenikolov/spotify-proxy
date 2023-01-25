@@ -49,7 +49,13 @@ public class SecurityConfig {
                 .and()
                     .defaultSuccessUrl("/v1/search", true)
                 .and()
-                .headers().frameOptions().disable();
+                .headers()
+                    .frameOptions()
+                    .disable()
+                .and()
+                .logout()
+                    .logoutUrl("/v1/logout")
+                    .logoutSuccessUrl("/v1/search");
         return http.build();
     }
 
