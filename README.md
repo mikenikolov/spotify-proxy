@@ -1,6 +1,6 @@
 # 🔀 Spotify Proxy 🔀
-Spotify proxy service to search for **artists** with their top tracks,
-genres and save them in the cache for the next request.
+Spotify Proxy service implements `Proxy Pattern` to load **artists** with their top tracks,
+genres from Spotify API and save them in the cache for the next request.
 
 ## 🎯 Features
 - Find artists by their Spotify ID
@@ -9,7 +9,7 @@ genres and save them in the cache for the next request.
 
 ## 🔨 Technologies used in the project
 - Java 11
-- Spring Boot / Web / Security / Data
+- Spring Boot | MVC | Security | Data
 - Maven 3.8.1
 - H2 Database
 - Hibernate
@@ -18,19 +18,21 @@ genres and save them in the cache for the next request.
 - Jackson JSON
 - OAuth 2.0
 - Official Spotify API
+- JUnit | Mockito
+- SLF4J
 
 ## 🌐 Endpoints
-|   Method   | URL                      | Description                   |
-|:----------:|--------------------------|:------------------------------|
-|   `GET`    | `/v1/login`              | `Login with Spotify`          |
-| `POST/GET` | `/logout`                | `Logout`                      |
-|   `GET`    | `/v1/search`             | `Show all artists from cache` |
-|   `GET`    | `/v1/search/id/{id}`     | `Find artist by Spotify ID`   |
-|   `GET`    | `/v1/search/name/{name}` | `Find artist by their name`   |
+| Method | URL                      | Description                   |
+|:------:|--------------------------|:------------------------------|
+| `GET`  | `/v1/login`              | `Login with Spotify`          |
+| `GET`  | `/v1/logout`             | `Logout`                      |
+| `GET`  | `/v1/search`             | `Show all artists from cache` |
+| `GET`  | `/v1/search/id/{id}`     | `Find artist by Spotify ID`   |
+| `GET`  | `/v1/search/name/{name}` | `Find artist by their name`   |
 
-## ❓ How to setup
+## ❓ How to set up
 
-**1**. Install Java 11+, Maven ([Help Link](https://mkyong.com/maven/how-to-install-maven-in-windows/)) and Git
+**1**. Install JDK 11
 
 **2**. Clone the newest version of the project
 
@@ -59,10 +61,14 @@ Creating system variables using the command line, Windows example:
 After setting system variables **❗ don't forget to restart your command line ❗** and only then go
 to the next step
 
-**6**. Navigate to the root directory of the project and run it using the console with the following command
-(or just open this project in the IDE and run the `main()` method)
+**6**. To run the application, navigate to the root directory of the project and run it using the console with the following command
 
-`mvn spring-boot:run`
+For Windows: `mvnw.cmd spring-boot:run -DskipTests`
+
+For Linux: `./mvnw spring-boot:run -DskipTests`
+
+_If you have pre-installed right version of Maven:_
+`mvn spring-boot:run -DskipTests`
 
 ## ⁉ How to use
 
@@ -73,12 +79,14 @@ because in order to make a request to the Spotify API, we need to be their user.
 
 If you are not logged in yet and want to find an artist you have not cached
 you will see the following message
+
 ![image](https://user-images.githubusercontent.com/101512791/198290623-44ae326f-7875-4f5b-ab7a-de75a71acf7a.png)
 
 So to find artists that are not yet in the cache, you need to authenticate through your
 Spotify account
 following `/v1/login` and then you will be redirected to official
 Spotify login form.
+
 ![image](https://user-images.githubusercontent.com/101512791/198287998-774d65a1-e2be-4892-bec2-c77f382e5331.png)
 
 **2️⃣: Make a request**
@@ -86,9 +94,10 @@ Spotify login form.
 So now we can make a request.
 Let's find an artist named `FINNEAS`
 
-![image](https://user-images.githubusercontent.com/101512791/198291015-6e8bf10c-5e7d-4768-993d-9683120f73b0.png)
+![image](https://user-images.githubusercontent.com/101512791/214610686-f9fdc08e-6a59-45ef-82c1-bb6da9cb1072.png)
 
 Let's take a look at the console logs
+
 ![image](https://user-images.githubusercontent.com/101512791/198291427-433f6428-b7bd-4516-95e3-c8a7227af680.png)
 
 We just found the artist and saved it in our cache (database), let's do the same query again
@@ -96,12 +105,15 @@ We just found the artist and saved it in our cache (database), let's do the same
 Nothing much has happened for the user of this service, the result is the same,
 BUT as you can see at the console logs, this artist has now been loaded from the cache.
 We didn't even hit the Spotify API :)
+
 ![image](https://user-images.githubusercontent.com/101512791/198291792-2c24860f-6fa9-4505-90f6-62301ee72d4e.png)
 
 Also, we can make a request by Spotify ID
-![image](https://user-images.githubusercontent.com/101512791/198295350-bf1686ec-a743-43cc-b6b4-e8c2237422c3.png)
+
+![image](https://user-images.githubusercontent.com/101512791/214611218-5126a4fd-0a36-474f-9b71-3f86125c3eb5.png)
 
 ❗ If the artist does not exist, we will receive the following message
+
 ![image](https://user-images.githubusercontent.com/101512791/198300641-e8367e6e-9123-4d4a-853b-955d8c5768fd.png)
 
 ❗ Please note that you can get an artist from the cache only by entering its full and
@@ -110,7 +122,7 @@ been saved before, it will not be added to the cache.
 
 Example: `/v1/search/name/finne` (should be `finneas`)
 
-![image](https://user-images.githubusercontent.com/101512791/198301849-1267a1e4-7ba5-43a9-bd5d-7e148d26c16a.png)
+![image](https://user-images.githubusercontent.com/101512791/214611748-9b75df94-8f4e-453b-8937-e7a7e51cbe75.png)
 ![image](https://user-images.githubusercontent.com/101512791/198301633-0e6ded11-b443-4e33-885a-347820a04439.png)
 
 The artist was found, but we don't store it as it is already in our cache
@@ -119,7 +131,8 @@ The artist was found, but we don't store it as it is already in our cache
 
 Even unauthenticated user can see cached artists with their genres and tracks
 by running the same request or following the link `/v1/search` to see all cached artists
-![image](https://user-images.githubusercontent.com/101512791/198295938-c6c70656-f5e7-412a-abcc-8c53d85e25d7.png)
+
+![image](https://user-images.githubusercontent.com/101512791/214615857-cf2ac10a-b3b9-4cbd-af18-461814ab7f54.png)
 
 The application supports **pagination**, by default, it's only 3 artists on the first page,
 but it can be configured in
@@ -127,7 +140,8 @@ but it can be configured in
 `src/main/resources/application.properties` -> `pageable.size = size-number`
 
 Let's go to the second page by `/v1/search?page=2`
-![image](https://user-images.githubusercontent.com/101512791/198296833-e4377c49-a92a-4472-90ea-806b31574587.png)
+
+![image](https://user-images.githubusercontent.com/101512791/214616234-215a0e13-d2ec-41cd-8aec-83d93b06c664.png)
 
 We can see the next page with artists.
 
