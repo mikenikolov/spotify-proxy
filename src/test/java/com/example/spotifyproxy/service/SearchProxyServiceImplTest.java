@@ -22,7 +22,7 @@ import java.util.Optional;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
-public class SearchProxyServiceImplTest {
+class SearchProxyServiceImplTest {
     @Mock
     private SearchServiceImpl searchService;
     @Autowired
@@ -45,51 +45,47 @@ public class SearchProxyServiceImplTest {
 
     @Test
     void findArtistByName_NotFound_Ok() {
-        Mockito.when(searchService.findArtistByName(Mockito.anyString()))
+        Mockito.when(searchService.findArtistByName("some-artist"))
                 .thenReturn(expectedArtist);
         Artist artist = searchServiceProxy.findArtistByName("some-artist");
-        Assertions.assertNotNull(artist.getId());
+        Assertions.assertNotNull(artist.getId(), "Artist ID is null");
 
-        Optional<Artist> optionalArtistFromDb = artistRepository.findById(expectedArtist.getId());
-        Assertions.assertTrue(optionalArtistFromDb.isPresent(), "Artist was not saved to cache");
-        Artist artistFromDb = optionalArtistFromDb.get();
+        Optional<Artist> artistFromDb = artistRepository.findById(artist.getId());
+        Assertions.assertTrue(artistFromDb.isPresent(), "Artist with returned ID was not found");
 
-        Assertions.assertEquals(expectedArtist.getArtistName(), artistFromDb.getArtistName());
-        Assertions.assertEquals(expectedArtist.getFollowers(), artistFromDb.getFollowers());
-        Assertions.assertEquals(expectedArtist.getSpotifyId(), artistFromDb.getSpotifyId());
+        Assertions.assertEquals(expectedArtist, artist, "Expected artist and returned one from method are different");
+        Assertions.assertEquals(expectedArtist, artistFromDb.get(), "Expected artist and returned one from DB are different");
     }
 
     @Test
     @Sql("/script/init_one_artist_exists.sql")
     void findArtistByName_Found_Ok() {
         Artist artist = searchServiceProxy.findArtistByName("some-artist");
-        Assertions.assertNotNull(artist.getId());
-        Assertions.assertEquals(expectedArtist.getArtistName(), artist.getArtistName());
-        Assertions.assertEquals(expectedArtist.getFollowers(), artist.getFollowers());
+        Assertions.assertNotNull(artist.getId(), "Artist ID is null");
+        Assertions.assertEquals(expectedArtist.getArtistName(), artist.getArtistName(), "Artist name is different");
+        Assertions.assertEquals(expectedArtist.getFollowers(), artist.getFollowers(), "Artist follower number is different");
     }
 
     @Test
     @Sql("/script/init_one_artist_exists.sql")
     void findArtistById_Found_Ok() {
         Artist artist = searchServiceProxy.findArtistById("SomeArtistId");
-        Assertions.assertNotNull(artist.getId());
-        Assertions.assertEquals(expectedArtist.getArtistName(), artist.getArtistName());
-        Assertions.assertEquals(expectedArtist.getFollowers(), artist.getFollowers());
+        Assertions.assertNotNull(artist.getId(), "Artist ID is null");
+        Assertions.assertEquals(expectedArtist.getArtistName(), artist.getArtistName(), "Artist name is different");
+        Assertions.assertEquals(expectedArtist.getFollowers(), artist.getFollowers(), "Artist follower number is different");
     }
 
     @Test
     void findArtistById_NotFound_Ok() {
-        Mockito.when(searchService.findArtistById(Mockito.anyString()))
+        Mockito.when(searchService.findArtistById("SomeArtistId"))
                 .thenReturn(expectedArtist);
         Artist artist = searchServiceProxy.findArtistById("SomeArtistId");
-        Assertions.assertNotNull(artist.getId());
+        Assertions.assertNotNull(artist.getId(), "Artist ID is null");
 
-        Optional<Artist> optionalArtistFromDb = artistRepository.findById(expectedArtist.getId());
-        Assertions.assertTrue(optionalArtistFromDb.isPresent(), "Artist was not saved to cache");
-        Artist artistFromDb = optionalArtistFromDb.get();
+        Optional<Artist> artistFromDb = artistRepository.findById(artist.getId());
+        Assertions.assertTrue(artistFromDb.isPresent(), "Artist with returned ID was not found");
 
-        Assertions.assertEquals(expectedArtist.getArtistName(), artistFromDb.getArtistName());
-        Assertions.assertEquals(expectedArtist.getFollowers(), artistFromDb.getFollowers());
-        Assertions.assertEquals(expectedArtist.getSpotifyId(), artistFromDb.getSpotifyId());
+        Assertions.assertEquals(expectedArtist, artist, "Expected artist and returned one from method are different");
+        Assertions.assertEquals(expectedArtist, artistFromDb.get(), "Expected artist and returned one from DB are different");
     }
 }

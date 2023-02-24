@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.nullValue;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
-public class ExistsEntityCheckerImplTest {
+class ExistsEntityCheckerImplTest {
     @Autowired
     private ExistsEntityChecker checker;
     private List<Genre> genres;
