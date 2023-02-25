@@ -2,17 +2,16 @@ package com.example.spotifyproxy.service;
 
 import com.example.spotifyproxy.model.Artist;
 import com.example.spotifyproxy.repository.ArtistRepository;
-import com.example.spotifyproxy.service.component.ArtistSaver;
 import com.example.spotifyproxy.service.impl.SearchServiceImpl;
 import com.example.spotifyproxy.service.impl.SearchServiceProxyImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +22,11 @@ import java.util.Optional;
 @AutoConfigureTestDatabase
 @Transactional
 class SearchProxyServiceImplTest {
-    @Mock
+    @MockBean
     private SearchServiceImpl searchService;
     @Autowired
     private ArtistRepository artistRepository;
     @Autowired
-    private ArtistSaver artistSaver;
     private SearchServiceProxyImpl searchServiceProxy;
     private Artist expectedArtist;
 
@@ -40,7 +38,6 @@ class SearchProxyServiceImplTest {
                 .setGenres(new ArrayList<>())
                 .setFollowers(5000)
                 .setSpotifyId("SomeArtistId");
-        searchServiceProxy = new SearchServiceProxyImpl(artistRepository, searchService, artistSaver);
     }
 
     @Test
