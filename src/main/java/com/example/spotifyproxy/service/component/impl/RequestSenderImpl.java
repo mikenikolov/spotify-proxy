@@ -8,6 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public class RequestSenderImpl implements RequestSender {
         String spotifyToken = SecurityContextHolder.getContext().getAuthentication().getName();
         req.setHeader("Authorization", "Bearer " + spotifyToken);
         try (CloseableHttpResponse resp = httpClient.execute(req)) {
-            if (resp.getStatusLine().getStatusCode() == 401) {
+            if (resp.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
                 throw new UnauthorizedException("Unauthorized request. You need to login as Spotify user");
             }
             return EntityUtils.toString(resp.getEntity());
