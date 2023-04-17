@@ -132,7 +132,7 @@ The artist was found, but we don't store it as it is already in our cache
 Even unauthenticated user can see cached artists with their genres and tracks
 by running the same request or following the link `/v1/search` to see all cached artists
 
-![image](https://user-images.githubusercontent.com/101512791/214615857-cf2ac10a-b3b9-4cbd-af18-461814ab7f54.png)
+![image](https://user-images.githubusercontent.com/101512791/232555995-e080a673-dc94-4c80-b2f7-3b98c0625775.png)
 
 The application supports **pagination**, by default, it's only 3 artists on the first page,
 but it can be configured in
@@ -141,9 +141,22 @@ but it can be configured in
 
 Let's go to the second page by `/v1/search?page=2`
 
-![image](https://user-images.githubusercontent.com/101512791/214616234-215a0e13-d2ec-41cd-8aec-83d93b06c664.png)
+![image](https://user-images.githubusercontent.com/101512791/232556182-0f304ef7-4721-47b8-aa2a-9c6ca481bbc8.png)
 
 We can see the next page with artists.
+
+And the last page:
+
+![image](https://user-images.githubusercontent.com/101512791/232556262-3dd4091c-2cd9-4688-a735-7edfd8356161.png)
+
+As you can see, there is metadata about the total number of pages, the last, current and also links for the next and previous pages,
+which helps to parse this response conveniently.
+
+❗ If the user goes to the wrong page, it will be handled by the exception handler
+
+![image](https://user-images.githubusercontent.com/101512791/232555497-fb78de37-24f1-459d-9066-7d7c69e644ea.png)
+
+![image](https://user-images.githubusercontent.com/101512791/232555562-e5d39925-08a3-4b9e-9d15-b5834be8ede9.png)
 
 ## 🙏 Acknowledgements
 I would like to thank my classmates **Vitaliy Vybornyi**, **Dmytro Vovk** and **Denis Kuchma** for
