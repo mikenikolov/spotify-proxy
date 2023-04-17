@@ -1,10 +1,8 @@
 package com.example.spotifyproxy.service;
 
 import com.example.spotifyproxy.model.Artist;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface SearchCacheService {
-    List<Artist> getAllCashed(Pageable pageable);
+    Page<Artist> getAllCashed(Integer pageIndex);
 }
